@@ -19,13 +19,31 @@
     return element.getAttribute('profile-' + name);
   }
 
+  function supportPassiveCheck() { //https://www.chromestatus.com/feature/5745543795965952
+    var supportsPassive = false;
+    try {
+      var opts = Object.defineProperty({}, 'passive', {
+        get: function() {
+          supportsPassive = true;
+        }
+      });
+      window.addEventListener("testPassive", null, opts);
+      window.removeEventListener("testPassive", null, opts);
+    } catch (e) {}
+    return supportsPassive;
+  }
+
+  function getPassiveResult(){
+    return supportPassiveCheck() ? { passive: true } : false;
+  }
+
   function messageListener(iframe) {
     if (window.addEventListener) {
       window.addEventListener('message', function(e) {
         if (iframe.id === e.data.sender) {
           iframe.height = e.data.height;
         }
-      }, false);
+      }, getPassiveResult());
     }
   }
 
