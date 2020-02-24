@@ -1,0 +1,85 @@
+{
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dockerhub-profile {
+    text-align: center;
+    background: #88959b;
+    color: #b8c6cc;
+}
+
+.dockerhub-profile .header {
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    background-image: url(https://dumontsean.com/wp-content/uploads/2020/02/jasper-boer-1fUu0dratoM-unsplash-scaled.jpg);
+}
+
+.dockerhub-profile .avatar {
+    display: inline-block;
+    overflow: hidden;
+    background: #88959b;
+    border-radius: 100%;
+}
+
+.dockerhub-profile h1 {
+    color: #111111;
+    font-size: 20px;
+    font-weight: 600;
+    text-indent: 5px;
+}
+
+
+.dockerhub-profile ul {
+    font-size: 14px;
+    color: #adb3b6;
+    list-style-type: none;
+    padding: 0;
+    border-top: 1px solid #b8c6cc;
+}
+
+.dockerhub-profile ul:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.default-theme .avatar {
+    margin-top: -40px;
+    border: 3px solid #b8c6cc;
+    position: relative;
+}
+
+.default-theme a img {
+    display: block;
+    width: 80px;
+    height: 80px;
+}
+
+.default-theme .counts li {
+    float: left;
+    padding: 5px 0;
+    box-shadow: 1px 0 0 #b8c6cc;
+    width: 33%;
+}
+
+.default-theme .counts li:last-of-type {
+    box-shadow: none;
+}
+
+.default-theme .counts a {
+    color: #313d42;
+    text-decoration: none;
+}
+
+.default-theme .counts a:hover {
+    color: #83c441;
+}
+
+.default-theme .counts strong {
+    display: block;
+    color: #292f33;
+    font-size: 16px;
+    line-height: 1.5;
+}
