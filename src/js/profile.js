@@ -15,39 +15,6 @@ var queryParams = getQueryParams();
 (function(d) {
     var apiUrl = 'https://test-worker.corsbypass.workers.dev/proxy?apiurl=https://hub.docker.com/v2/';
 
-    function checkCache(url) {
-        var cache = cacheData(url);
-        if (cache && cache._timestamp) {
-            // cache in 15s
-            if (new Date().valueOf() - cache._timestamp < 15000) {
-                return cache;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    function cacheData(url, data) {
-        try {
-            if (window.localStorage) {
-                if (data) {
-                    data._timestamp = new Date().valueOf();
-                    localStorage[url] = JSON.stringify(data);
-                } else {
-                    var ret = localStorage[url];
-                    if (ret) {
-                        return JSON.parse(ret);
-                    }
-                    return null;
-                }
-            }
-        } catch (e) {
-            console.log("DockerHub Profile Error caching data into local browser storage: " + e);
-        }
-    }
-
     function getValue(data, key) {
         var ret = data;
         var bits = key.split('.');
@@ -76,9 +43,6 @@ var queryParams = getQueryParams();
     }
 
     function request(url, callback) {
-        var cache = checkCache(url);
-        if (cache != null) callback(cache);
-
         fetch(url).then(function(res) {
             return res.json();
         }).then(function(data) {
@@ -86,13 +50,11 @@ var queryParams = getQueryParams();
         });
     }
 
-    async function asyncRequest(url) {
-        var resultData = {};
-        var cache = checkCache(url);
-        if (cache != null) return cache;
-        const response = await fetch(url);
-        resultData = await response.json();
-        return resultData;
+    async function syncRequest(url) {
+         var res = await fetch(url);
+         var data = await res.json();
+
+        return data;
     }
 
     function profilePoster(card, identity) {
@@ -123,19 +85,16 @@ var queryParams = getQueryParams();
     function getUserProfile(user) {
         var url = apiUrl + 'users/' + user + '/';
         var reposUrl = apiUrl + 'repositories/' + user + '/';
-        request(url, function(data) {
+        request(url, async function(data) {
             data = data || {};
             var empty = '0';
-            if (data) {
-                cacheData(url, data);
-            }
 
             data.username = user;
             data.full_name = data.full_name || user;
 
-            var allRepoData = asyncRequest(reposUrl);
+            var allRepoData = await syncRequest(reposUrl);
+            
             if (allRepoData) {
-                cacheData(reposUrl, allRepoData);
                 data.count = allRepoData.count || empty;
                 var pullCount = 0;
                 var starCount = 0;
@@ -147,6 +106,10 @@ var queryParams = getQueryParams();
                 }
                 data.total_pull_count = pullCount || empty;
                 data.total_star_count = starCount || empty;
+            } else {
+                data.count = empty;
+                data.total_pull_count = empty;
+                data.total_star_count = empty;
             }
 
             var profile = d.createElement('div');

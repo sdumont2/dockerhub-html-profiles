@@ -1,5 +1,5 @@
 (function(d) {
-  var baseUrl = "https://cdn.jsdelivr.net/gh/sdumont2/dockerhub-html-profiles@latest/dist/";
+  var baseUrl = "https://sdumont2.github.io/dockerhub-html-profiles/dist/";
 
   function getElementArrayByClass(name) {
     if (d.querySelectorAll) {
